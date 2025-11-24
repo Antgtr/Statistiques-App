@@ -90,23 +90,29 @@ if st.button("Générer les statistiques"):
     if df_filtered.empty:
         st.warning("Aucun trade trouvé dans cette période.")
     else:
-        nominal_sum = df_filtered.groupby(group_col)["Nominal"].sum()
-        trade_count = df_filtered.groupby(group_col)["Nominal"].count()
-        avg_nominal = nominal_sum / trade_count
+        # Aggregation
+        df_agg = df_filtered.groupby(group_col).agg(
+            Nominal_total=("Nominal", "sum"),
+            Trade_count=("Nominal", "count")
+        )
     
-        df_stats = pd.DataFrame({
-            "Nominal_total": nominal_sum,
-            "Trade_count": trade_count,
-            "Nominal_par_trade": avg_nominal
-        }).reset_index()
-            
+        # Nominal moyen
+        df_agg["Nominal_par_trade"] = df_agg["Nominal_total"] / df_agg["Trade_count"]
+    
+        # Remettre la colonne group_col comme colonne normale
+        df_stats = df_agg.reset_index()
+    
+        # Trier et prendre le top 10
         df_stats = df_stats.sort_values("Nominal_total", ascending=False).head(10)
-
+    
         # Formatage
         df_stats["Nominal_total"] = df_stats["Nominal_total"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
         df_stats["Nominal_par_trade"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
+    
+        # Affichage
+        st.dataframe(df_stats)
 
-        st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_trade"]])
+
 
 
 
