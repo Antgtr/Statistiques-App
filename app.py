@@ -95,11 +95,10 @@ if st.button("Générer les statistiques"):
         avg_nominal = nominal_sum / trade_count
     
         df_stats = pd.DataFrame({
-            group_col: nominal_sum.index,
-            "Nominal_total": nominal_sum.values,
-            "Trade_count": trade_count.values,
-            "Nominal_par_trade": avg_nominal.values
-        })
+            "Nominal_total": nominal_sum,
+            "Trade_count": trade_count,
+            "Nominal_par_trade": avg_nominal
+        }).reset_index()
             
         df_stats = df_stats.sort_values("Nominal_total", ascending=False).head(10)
 
@@ -108,6 +107,7 @@ if st.button("Générer les statistiques"):
         df_stats["Nominal_par_trade"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
 
         st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_trade"]])
+
 
 
 
