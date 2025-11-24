@@ -15,9 +15,32 @@ df["Nominal"] = (
 df["Nominal"] = pd.to_numeric(df["Nominal"], errors="coerce").fillna(0)
 
 # Conversion de la colonne Date
-df["TRADE DATE"] = pd.to_datetime(df["TRADE DATE"], errors="coerce")
+df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+
+# Filtrage business (MIFID + catégories)
+df = df[df["Is Mifid"] == "Mifid"]
+
+df_equity = df[df["Category product"] == "Equity"]
+df_rate = df[df["Category product"] == "Rate"]
+df_credit = df[df["Category product"] == "Credit"]
+
+df_equity_fixdiv_pts = df_equity[df_equity["type_div"] == "Absolute"]
+df_equity_fixdiv_pourc = df_equity[df_equity["type_div"] == "Proportional"]
+
+# Dictionnaire des datasets disponibles
+DATASETS = {
+    "Equity": df_equity,
+    "Rate": df_rate,
+    "Credit": df_credit,
+    "Equity FixDiv Points": df_equity_fixdiv_pts,
+    "Equity FixDiv %": df_equity_fixdiv_pourc,
+}
 
 st.title("Statistiques par Issuer")
+
+# Choix du dataset
+choice = st.selectbox("Choisir le dataset :", list(DATASETS.keys()))
+df_selected = DATASETS[choice]
 
 # Sélection des dates
 col1, col2 = st.columns(2)
@@ -30,9 +53,9 @@ with col2:
 if st.button("Générer les statistiques"):
 
     # Filtrer selon la période
-    df_filtered = df[
-        (df["TRADE DATE"] >= pd.to_datetime(start_date)) &
-        (df["TRADE DATE"] <= pd.to_datetime(end_date))
+    df_filtered = df_selected[
+        (df_selected["TRADE DATE"] >= pd.to_datetime(start_date)) &
+        (df_selected["TRADE DATE"] <= pd.to_datetime(end_date))
     ]
 
     if df_filtered.empty:
@@ -55,5 +78,3 @@ if st.button("Générer les statistiques"):
         df_stats["Nominal_par_trade"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
 
         st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_trade"]])
-
-
