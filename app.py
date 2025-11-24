@@ -4,6 +4,16 @@ import pandas as pd
 # Charger l’excel
 df = pd.read_excel("Statistiques.xlsx")
 
+df["Nominal"] = (
+    df["Nominal"]
+    .astype(str)
+    .str.replace(" ", "")
+    .str.replace(",", ".")
+    .str.replace("€", "")
+)
+
+df["Nominal"] = pd.to_numeric(df["Nominal"], errors="coerce").fillna(0)
+
 st.title("Statistiques par Issuer")
 
 # Bouton
@@ -24,5 +34,6 @@ if st.button("Générer les statistiques"):
     # Formatage
     df_stats["Nominal_total_fmt"] = df_stats["Nominal_total"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
     df_stats["Nominal_par_trade_fmt"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
+
 
     st.dataframe(df_stats[["Nominal_total_fmt", "Trade_count", "Nominal_par_trade_fmt"]])
