@@ -15,7 +15,7 @@ df["Nominal"] = (
 df["Nominal"] = pd.to_numeric(df["Nominal"], errors="coerce").fillna(0)
 
 # Conversion de la colonne Date
-df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+df["TRADE DATE"] = pd.to_datetime(df["TRADE DATE"], errors="coerce")
 
 # Filtrage business (MIFID + catégories)
 df = df[df["Is Mifid"] == "Mifid"]
@@ -78,3 +78,4 @@ if st.button("Générer les statistiques"):
         df_stats["Nominal_par_trade"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
 
         st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_trade"]])
+
