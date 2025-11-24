@@ -68,7 +68,7 @@ if choice == "Equity":
         if fixdiv_type == "Absolute":
             df_selected = df_equity_fixdiv_pts
 
-        if fixdiv_type == "Absolute":
+        if fixdiv_type == "Proportional":
             df_selected = df_equity_fixdiv_pourc
 
 # Sélection des dates
@@ -108,6 +108,7 @@ if st.button("Générer les statistiques"):
     
         # Affichage
         st.dataframe(df_stats)
+
 
 
 
