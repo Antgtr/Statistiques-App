@@ -91,16 +91,13 @@ if st.button("Générer les statistiques"):
         st.warning("Aucun trade trouvé dans cette période.")
     else:
         # Aggregation
-        df_agg = df_filtered.groupby(group_col).agg(
+        df_stats = df_filtered.groupby(group_col).agg(
             Nominal_total=("Nominal", "sum"),
             Trade_count=("Nominal", "count")
         )
     
         # Nominal moyen
-        df_agg["Nominal_par_trade"] = df_agg["Nominal_total"] / df_agg["Trade_count"]
-    
-        # Remettre la colonne group_col comme colonne normale
-        df_stats = df_agg
+        df_stats["Nominal_par_trade"] = df_agg["Nominal_total"] / df_agg["Trade_count"]
     
         # Trier et prendre le top 10
         df_stats = df_stats.sort_values("Nominal_total", ascending=False).head(10)
@@ -111,6 +108,7 @@ if st.button("Générer les statistiques"):
     
         # Affichage
         st.dataframe(df_stats)
+
 
 
 
