@@ -37,11 +37,13 @@ DATASETS = {
 
 st.title("Statistiques")
 
-#Choix By Issuer / By Underlying
+# Choix By Issuer / By Underlying
 data_filter = st.radio(
     "Filter by:",
     ["Issuer", "Underlying"]
 )
+
+group_col = "ISSUER" if data_filter == "Issuer" else "UNDERLYING"
 
 # Choix du dataset
 choice = st.selectbox("Choisir le dataset :", list(DATASETS.keys()))
@@ -82,32 +84,19 @@ if st.button("Générer les statistiques"):
         (df_selected["TRADE DATE"] <= pd.to_datetime(end_date))
     ]
 
-    if data_filter == "Issuer":
-        if df_filtered.empty:
-            st.warning("Aucun trade trouvé dans cette période.")
-        else:
-            nominal_sum = df_filtered.groupby("ISSUER")["Nominal"].sum()
-            trade_count = df_filtered.groupby("ISSUER")["Nominal"].count()
-            avg_nominal = nominal_sum / trade_count
+    if df_filtered.empty:
+        st.warning("Aucun trade trouvé dans cette période.")
+    else:
+        nominal_sum = df_filtered.groupby(group_col)["Nominal"].sum()
+        trade_count = df_filtered.groupby(group_col)["Nominal"].count()
+        avg_nominal = nominal_sum / trade_count
     
-            df_stats = pd.DataFrame({
-                "Nominal_total": nominal_sum,
-                "Trade_count": trade_count,
-                "Nominal_par_trade": avg_nominal
-            })
-    else: 
-        if df_filtered.empty:
-            st.warning("Aucun trade trouvé dans cette période.")
-        else:
-            nominal_sum = df_filtered.groupby("UNDERLYING")["Nominal"].sum()
-            trade_count = df_filtered.groupby("UNDERLYING")["Nominal"].count()
-            avg_nominal = nominal_sum / trade_count
-    
-            df_stats = pd.DataFrame({
-                "Nominal_total": nominal_sum,
-                "Trade_count": trade_count,
-                "Nominal_par_trade": avg_nominal
-            })
+        df_stats = pd.DataFrame({
+            group_col: nominal_sum.index,
+            "Nominal_total": nominal_sum.values,
+            "Trade_count": trade_count.values,
+            "Nominal_par_trade": avg_nominal.values
+        })
             
         df_stats = df_stats.sort_values("Nominal_total", ascending=False).head(10)
 
@@ -116,6 +105,7 @@ if st.button("Générer les statistiques"):
         df_stats["Nominal_par_trade"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
 
         st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_trade"]])
+
 
 
 
