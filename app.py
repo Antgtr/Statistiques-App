@@ -36,5 +36,6 @@ if st.button("Générer les statistiques"):
     df_stats["Nominal_par_trade"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
 
 
-    st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_tradet"]])
+    st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_trade"]])
+
 
