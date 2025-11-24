@@ -32,8 +32,9 @@ if st.button("Générer les statistiques"):
     df_stats = df_stats.sort_values("Nominal_total", ascending=False).head(10)
 
     # Formatage
-    df_stats["Nominal_total_fmt"] = df_stats["Nominal_total"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
-    df_stats["Nominal_par_trade_fmt"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
+    df_stats["Nominal_total"] = df_stats["Nominal_total"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
+    df_stats["Nominal_par_trade"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
 
 
-    st.dataframe(df_stats[["Nominal_total_fmt", "Trade_count", "Nominal_par_trade_fmt"]])
+    st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_tradet"]])
+
