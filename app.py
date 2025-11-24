@@ -46,7 +46,7 @@ fixdiv_filter = None
 fixdiv_type = None
 
 if choice == "Equity":
-    fixdiv_filter = st.checkbox("Filtrer par dividende fixe (FixDiv) ?")
+    fixdiv_filter = st.checkbox("Filtrer FixDiv")
 
     if fixdiv_filter:
         fixdiv_type = st.selectbox(
@@ -96,5 +96,6 @@ if st.button("Générer les statistiques"):
         df_stats["Nominal_par_trade"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
 
         st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_trade"]])
+
 
 
