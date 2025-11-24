@@ -24,6 +24,7 @@ df_equity = df[df["Category product"] == "Equity"]
 df_rate = df[df["Category product"] == "Rate"]
 df_credit = df[df["Category product"] == "Credit"]
 
+df_equity_fixdiv = df_equity[df_equity["Div Kind"] == "synthetic"]
 df_equity_fixdiv_pts = df_equity[df_equity["type_div"] == "Absolute"]
 df_equity_fixdiv_pourc = df_equity[df_equity["type_div"] == "Proportional"]
 
@@ -32,8 +33,6 @@ DATASETS = {
     "Equity": df_equity,
     "Rate": df_rate,
     "Credit": df_credit,
-    "Equity FixDiv Points": df_equity_fixdiv_pts,
-    "Equity FixDiv %": df_equity_fixdiv_pourc,
 }
 
 st.title("Statistiques par Issuer")
@@ -41,6 +40,25 @@ st.title("Statistiques par Issuer")
 # Choix du dataset
 choice = st.selectbox("Choisir le dataset :", list(DATASETS.keys()))
 df_selected = DATASETS[choice]
+
+# Logique dynamique : options FixDiv seulement si Equity
+fixdiv_filter = None
+fixdiv_type = None
+
+if choice == "Equity":
+    fixdiv_filter = st.checkbox("Filtrer par dividende fixe (FixDiv) ?")
+
+    if fixdiv_filter:
+        fixdiv_type = st.selectbox(
+            "Choisir le type de dividende",
+            ["Absolute", "Proportional"]
+        )
+
+        if fixdiv_type == "Absolute":
+            df_selected = df_equity_fixdiv_pts
+
+        if fixdiv_type == "Absolute":
+            df_selected = df_equity_fixdiv_pourc
 
 # Sélection des dates
 col1, col2 = st.columns(2)
@@ -78,4 +96,5 @@ if st.button("Générer les statistiques"):
         df_stats["Nominal_par_trade"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
 
         st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_trade"]])
+
 
