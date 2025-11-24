@@ -100,7 +100,7 @@ if st.button("Générer les statistiques"):
         df_agg["Nominal_par_trade"] = df_agg["Nominal_total"] / df_agg["Trade_count"]
     
         # Remettre la colonne group_col comme colonne normale
-        df_stats = df_agg.reset_index()
+        #df_stats = df_agg.reset_index()
     
         # Trier et prendre le top 10
         df_stats = df_stats.sort_values("Nominal_total", ascending=False).head(10)
@@ -111,6 +111,7 @@ if st.button("Générer les statistiques"):
     
         # Affichage
         st.dataframe(df_stats)
+
 
 
 
