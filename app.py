@@ -43,7 +43,10 @@ data_filter = st.radio(
     ["Issuer", "Underlying"]
 )
 
-group_col = "ISSUER" if data_filter == "Issuer" else "UNDERLYING"
+if data_filter == "Issuer":
+    group_col = "ISSUER" 
+else: 
+    group_col = "UNDERLYING"
 
 # Choix du dataset
 choice = st.selectbox("Choisir le dataset :", list(DATASETS.keys()))
@@ -105,6 +108,7 @@ if st.button("Générer les statistiques"):
         df_stats["Nominal_par_trade"] = df_stats["Nominal_par_trade"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
 
         st.dataframe(df_stats[["Nominal_total", "Trade_count", "Nominal_par_trade"]])
+
 
 
 
