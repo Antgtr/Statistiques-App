@@ -30,6 +30,7 @@ df_equity_fixdiv_pourc = df_equity[df_equity["type_div"] == "Proportional"]
 
 # Dictionnaire des datasets disponibles
 DATASETS = {
+    "All": df,
     "Equity": df_equity,
     "Rate": df_rate,
     "Credit": df_credit,
@@ -108,6 +109,7 @@ if st.button("Générer les statistiques"):
     
         # Affichage
         st.dataframe(df_stats)
+
 
 
 
