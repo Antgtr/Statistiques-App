@@ -101,7 +101,7 @@ if st.button("Générer les statistiques"):
         df_stats["Nominal_par_trade"] = df_stats["Nominal_total"] / df_stats["Trade_count"]
     
         # Trier et prendre le top 10
-        df_stats = df_stats.sort_values("Nominal_total", ascending=False).head(30)
+        df_stats = df_stats.sort_values("Nominal_total", ascending=False)
     
         # Formatage
         df_stats["Nominal_total"] = df_stats["Nominal_total"].apply(lambda x: f"{x:,.0f}".replace(",", " "))
@@ -109,6 +109,7 @@ if st.button("Générer les statistiques"):
     
         # Affichage
         st.dataframe(df_stats)
+
 
 
 
